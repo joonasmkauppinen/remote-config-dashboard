@@ -42,10 +42,10 @@ const ProjectsPage: NextPage = () => {
   return (
     <main className="flex min-h-screen justify-center bg-gray-900">
       <section className="w-full max-w-7xl pl-6 pr-6">
-        <h1 className="mt-8 mb-4 text-5xl font-bold text-white">Projects</h1>
-        <hr className="mb-8 border-slate-600" />
+        {/* <h1 className="mt-8 mb-4 text-5xl font-bold text-white">Projects</h1>
+        <hr className="mb-8 border-slate-600" /> */}
 
-        <form onSubmit={handleSubmit} className="mb-8 flex">
+        <form onSubmit={handleSubmit} className="mb-8 mt-8 flex">
           <input
             ref={nameInputRef}
             className="mr-2 flex-1 rounded border border-gray-700 bg-gray-800 p-3 text-white"
@@ -65,7 +65,7 @@ const ProjectsPage: NextPage = () => {
           ) : (
             projectsQuery.data.map(({ id, name }) => (
               <ProjectCard
-                href={`/project/${id}?name=${name}`}
+                href={`/projects/${name}?id=${id}`}
                 key={id}
                 name={name}
               />

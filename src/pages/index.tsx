@@ -29,10 +29,10 @@ const Home: NextPage = () => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerAuthSession(context);
 
-  if (session?.user) {
+  if (session) {
     return {
       redirect: {
-        destination: "/project",
+        destination: "/projects",
       },
     };
   }
