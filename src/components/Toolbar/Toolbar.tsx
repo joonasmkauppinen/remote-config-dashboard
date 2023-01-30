@@ -17,7 +17,6 @@ export const Toolbar = ({ profileImageSrc }: ProfileMenuProps) => {
       .map((item) => "/" + encodeURI(item))
       .join("")
   );
-  console.log({ hrefs });
 
   return (
     <header className="sticky top-0 border-b border-gray-700 bg-gray-900">

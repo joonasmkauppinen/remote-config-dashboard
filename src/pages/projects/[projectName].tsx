@@ -30,7 +30,7 @@ const ProjectDetailsPage: NextPage = () => {
           </h1>
           <button
             onClick={handleDeleteClick}
-            className="flex-shrink place-self-end rounded bg-red-500 p-2 px-4 font-semibold text-red-300"
+            className="flex-shrink place-self-end rounded bg-red-500 p-2 px-4 font-semibold text-red-200"
           >
             Delete
           </button>
@@ -43,6 +43,14 @@ const ProjectDetailsPage: NextPage = () => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerAuthSession(context);
+
+  if (!session?.user) {
+    return {
+      redirect: {
+        destination: "/",
+      },
+    };
+  }
 
   return {
     props: {
