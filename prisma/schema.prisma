@@ -22,8 +22,22 @@ model Example {
 }
 
 model Project {
-    id   String @id @default(cuid())
-    name String
+    id         String       @id @default(cuid())
+    name       String
+    tableEntry TableEntry[]
+}
+
+model TableEntry {
+    id                  String  @id @default(cuid())
+    name                String
+    email               String  @unique
+    role                String?
+    group               String?
+    notificationChannel String?
+    projectId           String
+    project             Project @relation(fields: [projectId], references: [id])
+
+    @@index([projectId])
 }
 
 // Necessary for Next auth

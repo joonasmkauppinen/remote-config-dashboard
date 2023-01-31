@@ -31,7 +31,7 @@ export const ProfileMenu = ({ profileImageSrc }: ProfileMenuProps) => {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className=" absolute right-0 z-10 mt-2 flex w-56 origin-top-right flex-col justify-items-stretch overflow-hidden rounded-md bg-gray-700 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className=" absolute right-0 z-10 mt-4 mr-3 flex w-56 origin-top-right flex-col justify-items-stretch overflow-hidden rounded-md bg-gray-700 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <Menu.Item>
             {() => (
               <button className=" p-3 text-left text-white hover:bg-slate-600">
