@@ -17,9 +17,9 @@ export const projectEntriesRouter = createTRPCRouter({
       z.object({
         name: z.string(),
         email: z.string(),
-        role: z.string(),
-        group: z.string(),
-        notificationChannel: z.string(),
+        role: z.string().nullable(),
+        group: z.string().nullable(),
+        notificationChannel: z.string().nullable(),
         projectId: z.string(),
       })
     )

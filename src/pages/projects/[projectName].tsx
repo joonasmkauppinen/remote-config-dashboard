@@ -1,4 +1,4 @@
-import { Menu, Transition } from "@headlessui/react";
+import { Popover, Transition } from "@headlessui/react";
 import type { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
@@ -16,6 +16,10 @@ const ProjectDetailsPage: NextPage = () => {
 
   const utils = api.useContext();
 
+  const tableEntries = api.projectEntries.findByProjectId.useQuery({
+    id: id as string,
+  });
+
   const deleteProject = api.project.deleteById.useMutation({
     async onSuccess() {
       await utils.project.getAllProjects.invalidate();
@@ -28,8 +32,9 @@ const ProjectDetailsPage: NextPage = () => {
       console.error("Failed to create table entry. ", error);
     },
 
-    onSuccess() {
+    async onSuccess() {
       console.info("Successfully added table entry! 🎉");
+      await utils.projectEntries.findByProjectId.invalidate();
     },
   });
 
@@ -37,15 +42,11 @@ const ProjectDetailsPage: NextPage = () => {
   const { errors } = formState;
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log("Form data: ", { data });
+    console.log({ data });
 
     await createTableEntry.mutateAsync({
-      email: "john.doe@email.com",
-      group: "events",
-      name: "John Doe",
-      notificationChannel: "news",
+      ...data,
       projectId: id as string,
-      role: "developer",
     });
   };
 
@@ -69,13 +70,13 @@ const ProjectDetailsPage: NextPage = () => {
             Delete
           </button>
         </div>
-        <h2 className="text-lg text-gray-400">{id}</h2>
-        <section className="mt-8">
-          <Menu>
-            <Menu.Button className="flex items-center rounded border border-gray-600 py-2 pl-3 pr-5 text-white">
+        <p className="text-lg text-gray-400">{id}</p>
+        <section className="mb-8 mt-8">
+          <Popover>
+            <Popover.Button className="flex items-center rounded border border-gray-600 py-2 pl-3 pr-5 text-white">
               <PlusIcon className="w-4" />
               <span className="ml-2">Add entry</span>
-            </Menu.Button>
+            </Popover.Button>
             <Transition
               as={Fragment}
               enter="transition ease-out duration-100"
@@ -85,7 +86,7 @@ const ProjectDetailsPage: NextPage = () => {
               leaveFrom="transform opacity-100 translate-y-0"
               leaveTo="transform opacity-0 -translate-y-2"
             >
-              <Menu.Items className="mt-2 w-fit">
+              <Popover.Panel className="absolute mt-2 w-fit">
                 <form
                   onSubmit={handleSubmit(onSubmit)}
                   className="flex w-96 flex-col items-stretch  rounded bg-gray-800 p-4"
@@ -180,16 +181,53 @@ const ProjectDetailsPage: NextPage = () => {
                     />
                   </div>
 
-                  <button
+                  <Popover.Button
                     className="rounded bg-green-600 py-2 text-white"
                     type="submit"
                   >
                     Add
-                  </button>
+                  </Popover.Button>
                 </form>
-              </Menu.Items>
+              </Popover.Panel>
             </Transition>
-          </Menu>
+          </Popover>
+        </section>
+        <section>
+          {tableEntries.data?.length > 0 && (
+            <table className="table-fixed border-collapse bg-gray-800 text-white">
+              <thead>
+                <tr>
+                  {Object.keys(tableEntries.data[0]).map(
+                    (columnHead, index) => (
+                      <th className="p-2 text-left" key={`${id}-col-${index}`}>
+                        {columnHead}
+                      </th>
+                    )
+                  )}
+                </tr>
+              </thead>
+              <tbody className="border-t border-t-gray-700">
+                {tableEntries.data.map((entry, rowIndex) => {
+                  const values = Object.values(entry);
+                  return (
+                    <tr
+                      className="even:bg-gray-700 hover:bg-gray-600"
+                      key={`${id}-row-${rowIndex}`}
+                    >
+                      {values.map((value, rowDataIndex) => (
+                        <td
+                          className="p-2"
+                          key={`${id}-row-${rowIndex}-${rowDataIndex}`}
+                        >
+                          {value}
+                        </td>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
         </section>
       </section>
     </main>
